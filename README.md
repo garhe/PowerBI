@@ -5,7 +5,10 @@ This repository contains Power BI assets and metric documentation for weekly and
 ## Contents
 
 - `retention-metric-definitions.md`: business-facing definitions for weekly and monthly CCID and retention metrics
-- `Speech CU.pbix`: Power BI Desktop report file
+
+## Optional Local Asset
+
+- `Speech CU.pbix`: Power BI Desktop report file (local file, not currently committed in this repository)
 
 ## Notes
 

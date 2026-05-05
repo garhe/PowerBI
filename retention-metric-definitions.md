@@ -113,6 +113,36 @@ If retention moves from 70% to 73%, that is:
 1. `+3.0 pp` change in retention
 2. not `+3%`
 
+## DAX Implementation Notes
+
+### Use Date table for period shifts
+Use Date-table time intelligence for prior-period logic instead of filtering fact-table week or month columns.
+
+Examples:
+1. Last Week = `CALCULATE([Active CCID], DATEADD('Date'[Date], -7, DAY))`
+2. Last Month = `CALCULATE([Active CCID], DATEADD('Date'[Date], -1, MONTH))`
+
+This keeps results aligned with report period selections and avoids blank or mismatched prior-period values.
+
+### Preserve product filter context
+For set-based metrics (`Retained`, `New`, `Churned`, `Prior Active`), remove only period columns from Date context, not all Date filters.
+
+Examples:
+1. Weekly set logic: `REMOVEFILTERS('Date'[WeekIndex], 'Date'[WeekEndFriday])`
+2. Monthly set logic: `REMOVEFILTERS('Date'[MonthIndex], 'Date'[MonthEnd])`
+
+This preserves `Speech L1/L2` context while shifting only time grain.
+
+### WoW and MoM should reference shared prior-period measures
+Define percent change metrics from base measures to avoid denominator drift across visuals.
+
+Examples:
+1. `CCID WoW % = DIVIDE([Active CCID] - [Last Week CCID], [Last Week CCID])`
+2. `CCID MoM % = DIVIDE([Active CCID] - [Last Month CCID], [Last Month CCID])`
+
+### Formatting note for conditional colors
+In rule-based conditional formatting for percent measures, use rule type `Number` (not `Percent`) for thresholds such as 0, -1, and 1.
+
 ## Short Version for Tooltip / Info Box
 
 ### CCID
